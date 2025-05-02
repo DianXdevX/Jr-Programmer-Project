@@ -1,0 +1,1 @@
+ eProjeto desenvolvido com Unity durante o curso Caminho Júnior ProGamer da Unoty, com foco na aplicação prática de Programação Orientada a Objetos (POO), controle de versão com GitHub Desktop e organização de código. No projeto, trabalhei com o fluxo de cenas, lógica de jogo, gerenciamento de scripts e boas práticas de estruturação em Unity.
