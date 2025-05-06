@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework.Internal.Filters;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -31,8 +32,12 @@ public class OptimUnit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleTime();
 
+        Profiler.BeginSample("Handling Time"); // begin profiling a piece of code with a custom label
+        HandleTime();
+        Profiler.EndSample(); // ends the current profiling sample
+
+        Profiler.BeginSample("Rotating"); // begin profiling  //inicio do traker do profile
         var t = transform;
         float xRotation = currentAngularVelocity * Time.deltaTime;
         float zRotation = currentAngularVelocity * Time.deltaTime;
@@ -44,9 +49,11 @@ public class OptimUnit : MonoBehaviour
             zRotation *= -1;
 
         transform.Rotate(xRotation, 0, zRotation);
-
+        Profiler.EndSample(); // end profiling  // isso e o fim do tracer do profiler
+        Profiler.BeginSample("Moving"); // begin profiling
         Move();
-
+        Profiler.EndSample(); // end profiling
+        Profiler.BeginSample("Boundary Check"); // begin profiling
         //check if we are moving away from the zone and invert velocity if this is the case
         if ((transform.position.x > areaSize.x && currentVelocity.x > 0)
             || (transform.position.x < -areaSize.x && currentVelocity.x < 0))
@@ -61,6 +68,7 @@ public class OptimUnit : MonoBehaviour
             currentVelocity.z *= -1;
             PickNewVelocityChangeTime(); //we pick a new change time as we changed velocity
         }
+        Profiler.EndSample(); // end profiling
     }
 
 
@@ -88,19 +96,21 @@ public class OptimUnit : MonoBehaviour
 
     void Move()
     {
-        Vector3 position = transform.position;
-        
-        float distanceToCenter = Vector3.Distance(Vector3.zero, position);
-        float speed = 0.5f + distanceToCenter / areaSize.magnitude;
-        
-        int steps = Random.Range(1000, 2000);
-        float increment = Time.deltaTime / steps;
-        for (int i = 0; i < steps; ++i)
-        {
-            position += currentVelocity * increment * speed;
-        }
-        
-        transform.position = position;
+
+        transform.position = transform.position + currentVelocity * Time.deltaTime;
+        // Vector3 position = transform.position;
+
+        // float distanceToCenter = Vector3.Distance(Vector3.zero, position);
+        // float speed = 0.5f + distanceToCenter / areaSize.magnitude;
+
+        // int steps = Random.Range(1000, 2000);
+        // float increment = Time.deltaTime / steps;
+        //  for (int i = 0; i < steps; ++i)
+        //  {
+        //      position += currentVelocity * increment * speed;
+        //  }
+
+        //  transform.position = position;
     }
 
     private void HandleTime()

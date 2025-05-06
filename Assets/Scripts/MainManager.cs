@@ -4,7 +4,7 @@ public class MainManager : MonoBehaviour
 {
     // Start() and Update() methods deleted - we don't need them right now
 
-    public static MainManager Instance; //static er aquilo que ja foi visto e um valor golbal para todas as intasia 
+    public static MainManager Instance { get; private set; } //static er aquilo que ja foi visto e um valor golbal para todas as intasia // get set  
     public Color TeamColor; // para armazenar a cor que  o jogador selecionar 
     private void Awake()
     {
